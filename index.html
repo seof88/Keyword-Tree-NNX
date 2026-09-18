@@ -169,6 +169,35 @@
   .btn.primary:hover { background: var(--rust); border-color: var(--rust); }
   .btn.ghost { background: transparent; }
 
+  .pillar-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: -8px 0 24px;
+  }
+  .pillar-nav:empty { display: none; margin: 0; }
+  .pillar-nav .chip {
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 7px 15px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--paper-raised);
+    color: var(--ink);
+    cursor: pointer;
+  }
+  .pillar-nav .chip:hover { border-color: var(--trunk-soft); color: var(--trunk); }
+  .pillar-nav .chip:focus-visible { outline: 2px solid var(--trunk-soft); outline-offset: 1px; }
+  .pillar-nav .chip .chip-count { color: var(--ink-soft); font-weight: 500; }
+  .pillar.jump-flash {
+    animation: jumpFlash 1.1s ease;
+  }
+  @keyframes jumpFlash {
+    0% { box-shadow: 0 0 0 2px var(--trunk-soft); }
+    100% { box-shadow: 0 1px 2px var(--shadow); }
+  }
+
   .empty-state {
     border: 1px dashed var(--border);
     border-radius: 12px;
@@ -341,7 +370,7 @@
 <div class="wrap">
   <header class="page-head">
     <div>
-      <h1>Cây từ khóa</h1>
+      <h1>Cây từ khóa NNX</h1>
       <p class="tagline">Quản lý cụm chủ đề và từ khóa con cho nội dung mới</p>
     </div>
     <div class="sync-status" id="syncStatus">Đang tải…</div>
@@ -355,6 +384,8 @@
     <button class="btn" id="exportJsonBtn">Xuất JSON</button>
     <button class="btn primary" id="addPillarBtn">+ Cụm chủ đề</button>
   </div>
+
+  <nav class="pillar-nav" id="pillarNav"></nav>
 
   <main id="pillarList"></main>
 
@@ -378,6 +409,7 @@
   let searchTerm = "";
 
   const listEl = document.getElementById("pillarList");
+  const pillarNavEl = document.getElementById("pillarNav");
   const syncEl = document.getElementById("syncStatus");
   const searchInput = document.getElementById("searchInput");
 
@@ -405,11 +437,11 @@
   }
 
   function addPillar() {
-    state.pillars.push({ id: uid(), name: "Cụm chủ đề mới", collapsed: false, keywords: [] });
+    state.pillars.unshift({ id: uid(), name: "Cụm chủ đề mới", collapsed: false, keywords: [] });
     render();
     scheduleSave();
     const inputs = listEl.querySelectorAll(".pillar-name");
-    if (inputs.length) inputs[inputs.length - 1].select();
+    if (inputs.length) inputs[0].select();
   }
 
   function removePillar(pid) {
@@ -445,7 +477,43 @@
     return hay.includes(searchTerm);
   }
 
+  function renderNav() {
+    pillarNavEl.innerHTML = "";
+    state.pillars.forEach(pillar => {
+      const chip = document.createElement("button");
+      chip.type = "button";
+      chip.className = "chip";
+      chip.dataset.id = pillar.id;
+      const label = document.createElement("span");
+      label.textContent = pillar.name;
+      const count = document.createElement("span");
+      count.className = "chip-count";
+      count.textContent = " · " + pillar.keywords.length;
+      chip.append(label, count);
+      chip.addEventListener("click", () => jumpToPillar(pillar.id));
+      pillarNavEl.appendChild(chip);
+    });
+  }
+
+  function jumpToPillar(pid) {
+    const pillar = state.pillars.find(p => p.id === pid);
+    if (!pillar) return;
+    if (pillar.collapsed) {
+      pillar.collapsed = false;
+      render();
+      scheduleSave();
+    }
+    requestAnimationFrame(() => {
+      const el = listEl.querySelector('.pillar[data-id="' + pid + '"]');
+      if (!el) return;
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+      el.classList.add("jump-flash");
+      setTimeout(() => el.classList.remove("jump-flash"), 1100);
+    });
+  }
+
   function render() {
+    renderNav();
     listEl.innerHTML = "";
 
     if (state.pillars.length === 0) {
