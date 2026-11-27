@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Cây từ khóa</title>
+<title>Cây từ khóa NNX</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -382,6 +382,8 @@
     </div>
     <button class="btn" id="exportCsvBtn">Xuất CSV</button>
     <button class="btn" id="exportJsonBtn">Xuất JSON</button>
+    <button class="btn" id="importBtn">Nhập file</button>
+    <input type="file" id="importFile" accept=".csv,.json,text/csv,application/json" hidden>
     <button class="btn primary" id="addPillarBtn">+ Cụm chủ đề</button>
   </div>
 
@@ -389,12 +391,17 @@
 
   <main id="pillarList"></main>
 
-  <footer>Dữ liệu được lưu tự động cho riêng bạn trong công cụ này.</footer>
+  <footer>Dữ liệu dùng chung, lưu tự động vào Google Sheet. Mọi người mở link đều thấy cùng một bản.</footer>
 </div>
 
 <script>
 (function () {
   "use strict";
+
+  // ===== CẤU HÌNH =====
+  // Dán URL Web App của Google Apps Script (kết thúc bằng /exec) vào đây.
+  const API_URL = "https://script.google.com/macros/s/AKfycbyz4Vjo3EuvIPp5ZA4pRVohjr0n3nLO0EwEuuMyuX5pXUaZiBpZuYQQPdt02ejl2fDNag/exec";
+  // =====================
 
   const STATUSES = [
     { value: "todo", label: "Chưa viết", cls: "status-todo" },
@@ -402,45 +409,114 @@
     { value: "done", label: "Đã đăng", cls: "status-done" },
   ];
   const STATUS_MAP = Object.fromEntries(STATUSES.map(s => [s.value, s]));
+  const LABEL_TO_STATUS = Object.fromEntries(STATUSES.map(s => [s.label, s.value]));
 
-  const STORAGE_KEY = "cay-tu-khoa:v1";
+  const OLD_STORAGE_KEY = "cay-tu-khoa:v1";
+  const COLLAPSE_KEY = "cay-tu-khoa:collapsed";
+  const POLL_MS = 20000;
+
   let state = { pillars: [] };
-  let saveTimer = null;
+  let version = 0;
+  let pending = [];
+  let inflight = false;
+  let flushTimer = null;
   let searchTerm = "";
+  let collapsed = {};
+  let loaded = false;
 
   const listEl = document.getElementById("pillarList");
   const pillarNavEl = document.getElementById("pillarNav");
   const syncEl = document.getElementById("syncStatus");
   const searchInput = document.getElementById("searchInput");
+  const importInput = document.getElementById("importFile");
 
-  function uid() {
-    return Math.random().toString(36).slice(2, 10);
-  }
+  try { collapsed = JSON.parse(localStorage.getItem(COLLAPSE_KEY) || "{}") || {}; } catch (e) { collapsed = {}; }
+  function saveCollapsed() { try { localStorage.setItem(COLLAPSE_KEY, JSON.stringify(collapsed)); } catch (e) {} }
 
-  function setSync(text) {
+  function uid() { return Math.random().toString(36).slice(2, 10); }
+  function setSync(text, isError) {
     syncEl.textContent = text;
+    syncEl.style.color = isError ? "var(--rust)" : "";
   }
 
-  function scheduleSave() {
+  function normStatus(v) {
+    v = String(v || "").trim();
+    if (STATUS_MAP[v]) return v;
+    return LABEL_TO_STATUS[v] || "todo";
+  }
+
+  // ---------- Đồng bộ với Google Sheet ----------
+  function queueOp(op) {
+    pending.push(op);
     setSync("Đang lưu…");
-    clearTimeout(saveTimer);
-    saveTimer = setTimeout(persist, 500);
+    clearTimeout(flushTimer);
+    flushTimer = setTimeout(flush, 400);
   }
 
-  function persist() {
+  async function flush() {
+    if (inflight || !pending.length) return;
+    inflight = true;
+    const ops = pending;
+    pending = [];
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-      setSync("Đã lưu trong trình duyệt này");
+      const res = await fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify({ ops }),
+      });
+      const data = await res.json();
+      if (!data.ok) throw new Error(data.error || "Lỗi máy chủ");
+      version = data.version;
+      if (!pending.length && !isEditing()) {
+        state = data.state;
+        render();
+      }
+      setSync("Đã lưu vào Google Sheet dùng chung");
     } catch (e) {
-      setSync("Lỗi khi lưu — trình duyệt có thể đang chặn bộ nhớ");
+      pending = ops.concat(pending);
+      setSync("Chưa lưu được, đang thử lại…", true);
+      setTimeout(flush, 5000);
+    } finally {
+      inflight = false;
+      if (pending.length) flush();
     }
   }
 
+  function isEditing() {
+    const a = document.activeElement;
+    return !!(a && listEl.contains(a) && (a.tagName === "INPUT" || a.tagName === "SELECT"));
+  }
+
+  async function loadFromServer() {
+    const res = await fetch(API_URL + "?t=" + Date.now());
+    const data = await res.json();
+    if (!data.ok) throw new Error(data.error || "Lỗi máy chủ");
+    state = data.state;
+    version = data.version;
+  }
+
+  async function poll() {
+    if (!API_URL || document.hidden || pending.length || inflight || isEditing()) return;
+    try {
+      const res = await fetch(API_URL + "?v=1&t=" + Date.now());
+      const data = await res.json();
+      if (data.ok && data.version !== version) {
+        await loadFromServer();
+        if (!pending.length && !isEditing()) {
+          render();
+          setSync("Đã cập nhật thay đổi mới nhất");
+        }
+      }
+    } catch (e) { /* bỏ qua, lần sau thử lại */ }
+  }
+
+  // ---------- Thao tác ----------
   function addPillar() {
-    state.pillars.unshift({ id: uid(), name: "Cụm chủ đề mới", collapsed: false, keywords: [] });
+    const p = { id: uid(), name: "Cụm chủ đề mới", keywords: [] };
+    state.pillars.unshift(p);
     render();
-    scheduleSave();
-    const inputs = listEl.querySelectorAll(".pillar-name");
+    queueOp({ type: "addPillar", id: p.id, name: p.name });
+    const inputs = listEl.queryAllSelectorAll(".pillar-name");
     if (inputs.length) inputs[0].select();
   }
 
@@ -450,15 +526,17 @@
     if (p.keywords.length && !confirm('Xóa cụm "' + p.name + '" và toàn bộ ' + p.keywords.length + ' từ khóa bên trong?')) return;
     state.pillars = state.pillars.filter(p => p.id !== pid);
     render();
-    scheduleSave();
+    queueOp({ type: "removePillar", id: pid });
   }
 
   function addKeyword(pid) {
     const p = state.pillars.find(p => p.id === pid);
     if (!p) return;
-    p.keywords.push({ id: uid(), text: "", article: "", status: "todo" });
+    const kw = { id: uid(), text: "", article: "", status: "todo" };
+    p.keywords.push(kw);
+    if (collapsed[pid]) { delete collapsed[pid]; saveCollapsed(); }
     render();
-    scheduleSave();
+    queueOp({ type: "addKeyword", pid, id: kw.id, text: "", article: "", status: "todo" });
     const rows = listEl.querySelectorAll('.pillar[data-id="' + pid + '"] .kw-text');
     if (rows.length) rows[rows.length - 1].focus();
   }
@@ -468,7 +546,13 @@
     if (!p) return;
     p.keywords = p.keywords.filter(k => k.id !== kid);
     render();
-    scheduleSave();
+    queueOp({ type: "removeKeyword", pid, id: kid });
+  }
+
+  function toggleCollapse(pid) {
+    if (collapsed[pid]) delete collapsed[pid]; else collapsed[pid] = true;
+    saveCollapsed();
+    render();
   }
 
   function matchesSearch(pillar, kw) {
@@ -496,13 +580,8 @@
   }
 
   function jumpToPillar(pid) {
-    const pillar = state.pillars.find(p => p.id === pid);
-    if (!pillar) return;
-    if (pillar.collapsed) {
-      pillar.collapsed = false;
-      render();
-      scheduleSave();
-    }
+    if (!state.pillars.find(p => p.id === pid)) return;
+    if (collapsed[pid]) { delete collapsed[pid]; saveCollapsed(); render(); }
     requestAnimationFrame(() => {
       const el = listEl.querySelector('.pillar[data-id="' + pid + '"]');
       if (!el) return;
@@ -516,15 +595,31 @@
     renderNav();
     listEl.innerHTML = "";
 
+    if (!loaded) return;
+
     if (state.pillars.length === 0) {
       const empty = document.createElement("div");
       empty.className = "empty-state";
-      empty.innerHTML = '<h2>Chưa có cụm từ khóa nào</h2><p>Bắt đầu bằng cách tạo một cụm chủ đề, ví dụ "Vay tiền mặt F88" hoặc "Hũ Sinh Lời".</p>';
+      empty.innerHTML = '<h2>Chưa có cụm từ khóa nào</h2><p>Tạo cụm chủ đề mới, hoặc nhập dữ liệu có sẵn từ file CSV/JSON đã xuất trước đây.</p>';
       const btn = document.createElement("button");
       btn.className = "btn primary";
       btn.textContent = "+ Tạo cụm đầu tiên";
       btn.addEventListener("click", addPillar);
-      empty.appendChild(btn);
+      const imp = document.createElement("button");
+      imp.className = "btn";
+      imp.style.marginLeft = "8px";
+      imp.textContent = "Nhập file CSV/JSON";
+      imp.addEventListener("click", () => importInput.click());
+      empty.append(btn, imp);
+      const local = readOldLocal();
+      if (API_URL && local && local.pillars.length) {
+        const up = document.createElement("button");
+        up.className = "btn";
+        up.style.marginLeft = "8px";
+        up.textContent = "Đưa dữ liệu cũ trong trình duyệt này lên";
+        up.addEventListener("click", () => replaceAll(local, "dữ liệu cũ trong trình duyệt"));
+        empty.appendChild(up);
+      }
       listEl.appendChild(empty);
       return;
     }
@@ -535,7 +630,7 @@
       if (searchTerm && visibleKws.length === 0 && !pillarMatchesName) return;
 
       const card = document.createElement("section");
-      card.className = "pillar" + (pillar.collapsed ? " collapsed" : "");
+      card.className = "pillar" + (collapsed[pillar.id] && !searchTerm ? " collapsed" : "");
       card.dataset.id = pillar.id;
 
       const head = document.createElement("div");
@@ -546,18 +641,15 @@
       toggle.type = "button";
       toggle.setAttribute("aria-label", "Thu gọn / mở rộng cụm");
       toggle.textContent = "▸";
-      toggle.addEventListener("click", () => {
-        pillar.collapsed = !pillar.collapsed;
-        render();
-        scheduleSave();
-      });
+      toggle.addEventListener("click", () => toggleCollapse(pillar.id));
 
       const nameInput = document.createElement("input");
       nameInput.className = "pillar-name";
       nameInput.value = pillar.name;
       nameInput.addEventListener("change", () => {
         pillar.name = nameInput.value.trim() || "Cụm chủ đề";
-        scheduleSave();
+        queueOp({ type: "updatePillar", id: pillar.id, name: pillar.name });
+        renderNav();
       });
 
       const count = document.createElement("span");
@@ -590,20 +682,26 @@
         textInput.className = "kw-text";
         textInput.placeholder = "từ khóa…";
         textInput.value = kw.text;
-        textInput.addEventListener("change", () => { kw.text = textInput.value; scheduleSave(); });
+        textInput.addEventListener("change", () => {
+          kw.text = textInput.value;
+          queueOp({ type: "updateKeyword", pid: pillar.id, id: kw.id, text: kw.text });
+        });
 
         const articleInput = document.createElement("input");
         articleInput.type = "text";
         articleInput.className = "kw-article";
         articleInput.placeholder = "bài viết liên kết (URL hoặc tên)";
         articleInput.value = kw.article;
-        articleInput.addEventListener("change", () => { kw.article = articleInput.value; scheduleSave(); });
+        articleInput.addEventListener("change", () => {
+          kw.article = articleInput.value;
+          queueOp({ type: "updateKeyword", pid: pillar.id, id: kw.id, article: kw.article });
+        });
 
         const statusWrap = document.createElement("div");
         statusWrap.className = "kw-status-wrap";
 
         const statusSelect = document.createElement("select");
-        statusSelect.className = "kw-status " + STATUS_MAP[kw.status].cls;
+        statusSelect.className = "kw-status " + STATUS_MAP[normStatus(kw.status)].cls;
         STATUSES.forEach(s => {
           const opt = document.createElement("option");
           opt.value = s.value;
@@ -614,7 +712,7 @@
         statusSelect.addEventListener("change", () => {
           kw.status = statusSelect.value;
           statusSelect.className = "kw-status " + STATUS_MAP[kw.status].cls;
-          scheduleSave();
+          queueOp({ type: "updateKeyword", pid: pillar.id, id: kw.id, status: kw.status });
         });
 
         const delKwBtn = document.createElement("button");
@@ -640,18 +738,17 @@
       listEl.appendChild(card);
     });
 
-    if (state.pillars.length > 0) {
-      const addRow = document.createElement("div");
-      addRow.className = "add-pillar-row";
-      const btn = document.createElement("button");
-      btn.className = "btn";
-      btn.textContent = "+ Cụm chủ đề mới";
-      btn.addEventListener("click", addPillar);
-      addRow.appendChild(btn);
-      listEl.appendChild(addRow);
-    }
+    const addRow = document.createElement("div");
+    addRow.className = "add-pillar-row";
+    const btn = document.createElement("button");
+    btn.className = "btn";
+    btn.textContent = "+ Cụm chủ đề mới";
+    btn.addEventListener("click", addPillar);
+    addRow.appendChild(btn);
+    listEl.appendChild(addRow);
   }
 
+  // ---------- Xuất / nhập ----------
   function csvEscape(v) {
     const s = String(v == null ? "" : v);
     if (/[",\n]/.test(s)) return '"' + s.replace(/"/g, '""') + '"';
@@ -674,10 +771,10 @@
     const rows = [["Cụm chủ đề", "Từ khóa", "Bài viết liên kết", "Trạng thái"]];
     state.pillars.forEach(p => {
       p.keywords.forEach(k => {
-        rows.push([p.name, k.text, k.article, STATUS_MAP[k.status].label]);
+        rows.push([p.name, k.text, k.article, STATUS_MAP[normStatus(k.status)].label]);
       });
     });
-    const csv = "\uFEFF" + rows.map(r => r.map(csvEscape).join(",")).join("\r\n");
+    const csv = "﻿" + rows.map(r => r.map(csvEscape).join(",")).join("\r\n");
     downloadFile("cay-tu-khoa.csv", csv, "text/csv;charset=utf-8");
   }
 
@@ -686,26 +783,118 @@
     downloadFile("cay-tu-khoa.json", json, "application/json;charset=utf-8");
   }
 
+  function parseCsv(text) {
+    text = text.replace(/^﻿/, "");
+    const rows = [];
+    let row = [], field = "", q = false;
+    for (let i = 0; i < text.length; i++) {
+      const c = text[i];
+      if (q) {
+        if (c === '"') {
+          if (text[i + 1] === '"') { field += '"'; i++; } else q = false;
+        } else field += c;
+      } else if (c === '"') q = true;
+      else if (c === ",") { row.push(field); field = ""; }
+      else if (c === "\n" || c === "\r") {
+        if (c === "\r" && text[i + 1] === "\n") i++;
+        row.push(field); rows.push(row); row = []; field = "";
+      } else field += c;
+    }
+    if (field || row.length) { row.push(field); rows.push(row); }
+    return rows.filter(r => r.some(x => x.trim() !== ""));
+  }
+
+  function csvToState(text) {
+    const rows = parseCsv(text);
+    if (rows.length && /cụm/i.test(rows[0][0] || "")) rows.shift();
+    const pillars = [];
+    const byName = {};
+    rows.forEach(r => {
+      const name = (r[0] || "").trim();
+      if (!name) return;
+      let p = byName[name];
+      if (!p) { p = { id: uid(), name, keywords: [] }; byName[name] = p; pillars.push(p); }
+      const text = (r[1] || "").trim(), article = (r[2] || "").trim();
+      if (!text && !article) return;
+      p.keywords.push({ id: uid(), text, article, status: normStatus(r[3]) });
+    });
+    return { pillars };
+  }
+
+  function readOldLocal() {
+    try {
+      const raw = localStorage.getItem(OLD_STORAGE_KEY);
+      if (!raw) return null;
+      const data = JSON.parse(raw);
+      return data && Array.isArray(data.pillars) ? data : null;
+    } catch (e) { return null; }
+  }
+
+  function replaceAll(newState, source) {
+    const nKw = newState.pillars.reduce((s, p) => s + p.keywords.length, 0);
+    const msg = "Thay TOÀN BỘ dữ liệu dùng chung bằng " + source + " (" + newState.pillars.length + " cụm, " + nKw + " từ khóa)?\nMọi người sẽ thấy dữ liệu mới này.";
+    if (state.pillars.length && !confirm(msg)) return;
+    state = { pillars: newState.pillars.map(p => ({ id: p.id || uid(), name: p.name, keywords: p.keywords.map(k => ({ id: k.id || uid(), text: k.text || "", article: k.article || "", status: normStatus(k.status) })) })) };
+    render();
+    queueOp({ type: "replaceAll", state });
+  }
+
+  importInput.addEventListener("change", () => {
+    const file = importInput.files[0];
+    importInput.value = "";
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        const text = String(reader.result);
+        let data;
+        if (/\.json$/i.test(file.name) || text.trim().startsWith("{")) {
+          data = JSON.parse(text);
+          if (!data || !Array.isArray(data.pillars)) throw new Error("JSON không đúng định dạng");
+        } else {
+          data = csvToState(text);
+        }
+        if (!data.pillars.length) throw new Error("File không có dữ liệu");
+        replaceAll(data, 'file "' + file.name + '"');
+      } catch (e) {
+        alert("Không đọc được file: " + e.message);
+      }
+    };
+    reader.readAsText(file, "utf-8");
+  });
+
   document.getElementById("addPillarBtn").addEventListener("click", addPillar);
   document.getElementById("exportCsvBtn").addEventListener("click", exportCsv);
   document.getElementById("exportJsonBtn").addEventListener("click", exportJson);
+  document.getElementById("importBtn").addEventListener("click", () => importInput.click());
   searchInput.addEventListener("input", () => {
     searchTerm = searchInput.value.trim().toLowerCase();
     render();
   });
 
-  (function init() {
+  window.addEventListener("beforeunload", e => {
+    if (pending.length || inflight) { e.preventDefault(); e.returnValue = ""; }
+  });
+  document.addEventListener("visibilitychange", () => { if (!document.hidden) poll(); });
+
+  (async function init() {
+    if (!API_URL) {
+      setSync("Chưa kết nối Google Sheet (thiếu API_URL)", true);
+      loaded = true;
+      render();
+      return;
+    }
+    setSync("Đang tải dữ liệu dùng chung…");
     try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (raw) {
-        const data = JSON.parse(raw);
-        if (data && Array.isArray(data.pillars)) state = data;
-      }
-      setSync("Đã lưu trong trình duyệt này");
+      await loadFromServer();
+      loaded = true;
+      setSync("Đã đồng bộ với Google Sheet dùng chung");
     } catch (e) {
-      setSync("Không tải được dữ liệu đã lưu");
+      setSync("Không tải được dữ liệu, hãy tải lại trang", true);
+      return;
     }
     render();
+    setInterval(poll, POLL_MS);
   })();
 })();
 </script>
