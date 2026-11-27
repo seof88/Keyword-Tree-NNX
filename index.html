@@ -64,345 +64,104 @@
     --border: #37392C;
     --shadow: rgba(0, 0, 0, 0.35);
   }
-
   * { box-sizing: border-box; }
-  html, body {
-    margin: 0;
-    background: var(--paper);
-    color: var(--ink);
-    font-family: 'Inter', sans-serif;
-    font-size: 15px;
-    line-height: 1.5;
-  }
+  html, body { margin: 0; background: var(--paper); color: var(--ink); font-family: 'Inter', sans-serif; font-size: 15px; line-height: 1.5; }
   body { padding: 32px 24px 80px; }
   .wrap { max-width: 880px; margin: 0 auto; }
-
-  header.page-head {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: flex-end;
-    gap: 16px;
-    margin-bottom: 8px;
-  }
-  h1 {
-    font-family: 'Fraunces', serif;
-    font-weight: 600;
-    font-size: 34px;
-    margin: 0 0 4px;
-    letter-spacing: -0.01em;
-  }
-  .tagline {
-    color: var(--ink-soft);
-    font-size: 14px;
-    margin: 0;
-  }
-  .sync-status {
-    font-size: 12.5px;
-    color: var(--ink-soft);
-    white-space: nowrap;
-  }
-
-  .toolbar {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    align-items: center;
-    margin: 24px 0 28px;
-    padding-bottom: 20px;
-    border-bottom: 1px solid var(--border);
-  }
-  .search-field {
-    flex: 1 1 220px;
-    position: relative;
-  }
-  .search-field input {
-    width: 100%;
-    padding: 9px 12px 9px 34px;
-    border: 1px solid var(--border);
-    border-radius: 7px;
-    background: var(--paper-raised);
-    color: var(--ink);
-    font-family: inherit;
-    font-size: 14px;
-  }
+  header.page-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 16px; margin-bottom: 8px; }
+  h1 { font-family: 'Fraunces', serif; font-weight: 600; font-size: 34px; margin: 0 0 4px; letter-spacing: -0.01em; }
+  .tagline { color: var(--ink-soft); font-size: 14px; margin: 0; }
+  .sync-status { font-size: 12.5px; color: var(--ink-soft); white-space: nowrap; }
+  .toolbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin: 24px 0 28px; padding-bottom: 20px; border-bottom: 1px solid var(--border); }
+  .search-field { flex: 1 1 220px; position: relative; }
+  .search-field input { width: 100%; padding: 9px 12px 9px 34px; border: 1px solid var(--border); border-radius: 7px; background: var(--paper-raised); color: var(--ink); font-family: inherit; font-size: 14px; }
   .search-field input:focus { outline: 2px solid var(--trunk-soft); outline-offset: -1px; }
-  .search-field::before {
-    content: "";
-    position: absolute;
-    left: 11px; top: 50%;
-    width: 13px; height: 13px;
-    transform: translateY(-50%);
-    border: 1.6px solid var(--ink-soft);
-    border-radius: 50%;
-    pointer-events: none;
-  }
-  .search-field::after {
-    content: "";
-    position: absolute;
-    left: 21px; top: 50%;
-    width: 6px; height: 1.6px;
-    transform: translateY(6px) rotate(45deg);
-    transform-origin: left;
-    background: var(--ink-soft);
-    pointer-events: none;
-  }
-  .btn {
-    font-family: inherit;
-    font-size: 13.5px;
-    font-weight: 600;
-    padding: 9px 14px;
-    border-radius: 7px;
-    border: 1px solid var(--border);
-    background: var(--paper-raised);
-    color: var(--ink);
-    cursor: pointer;
-    white-space: nowrap;
-  }
+  .search-field::before { content: ""; position: absolute; left: 11px; top: 50%; width: 13px; height: 13px; transform: translateY(-50%); border: 1.6px solid var(--ink-soft); border-radius: 50%; pointer-events: none; }
+  .search-field::after { content: ""; position: absolute; left: 21px; top: 50%; width: 6px; height: 1.6px; transform: translateY(6px) rotate(45deg); transform-origin: left; background: var(--ink-soft); pointer-events: none; }
+  .btn { font-family: inherit; font-size: 13.5px; font-weight: 600; padding: 9px 14px; border-radius: 7px; border: 1px solid var(--border); background: var(--paper-raised); color: var(--ink); cursor: pointer; white-space: nowrap; }
   .btn:hover { border-color: var(--trunk-soft); }
   .btn:focus-visible { outline: 2px solid var(--trunk-soft); outline-offset: 1px; }
-  .btn.primary {
-    background: var(--trunk);
-    border-color: var(--trunk);
-    color: #fff;
-  }
+  .btn.primary { background: var(--trunk); border-color: var(--trunk); color: #fff; }
   .btn.primary:hover { background: var(--rust); border-color: var(--rust); }
   .btn.ghost { background: transparent; }
-
-  .pillar-nav {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin: -8px 0 24px;
-  }
+  .pillar-nav { display: flex; flex-wrap: wrap; gap: 8px; margin: -8px 0 24px; }
   .pillar-nav:empty { display: none; margin: 0; }
-  .pillar-nav .chip {
-    font-family: inherit;
-    font-size: 13px;
-    font-weight: 600;
-    padding: 7px 15px;
-    border-radius: 999px;
-    border: 1px solid var(--border);
-    background: var(--paper-raised);
-    color: var(--ink);
-    cursor: pointer;
-  }
+  .pillar-nav .chip { font-family: inherit; font-size: 13px; font-weight: 600; padding: 7px 15px; border-radius: 999px; border: 1px solid var(--border); background: var(--paper-raised); color: var(--ink); cursor: pointer; }
   .pillar-nav .chip:hover { border-color: var(--trunk-soft); color: var(--trunk); }
   .pillar-nav .chip:focus-visible { outline: 2px solid var(--trunk-soft); outline-offset: 1px; }
   .pillar-nav .chip .chip-count { color: var(--ink-soft); font-weight: 500; }
-  .pillar.jump-flash {
-    animation: jumpFlash 1.1s ease;
-  }
-  @keyframes jumpFlash {
-    0% { box-shadow: 0 0 0 2px var(--trunk-soft); }
-    100% { box-shadow: 0 1px 2px var(--shadow); }
-  }
-
-  .empty-state {
-    border: 1px dashed var(--border);
-    border-radius: 12px;
-    padding: 48px 24px;
-    text-align: center;
-    color: var(--ink-soft);
-  }
-  .empty-state h2 {
-    font-family: 'Fraunces', serif;
-    font-weight: 600;
-    color: var(--ink);
-    font-size: 20px;
-    margin: 0 0 6px;
-  }
+  .pillar.jump-flash { animation: jumpFlash 1.1s ease; }
+  @keyframes jumpFlash { 0% { box-shadow: 0 0 0 2px var(--trunk-soft); } 100% { box-shadow: 0 1px 2px var(--shadow); } }
+  .empty-state { border: 1px dashed var(--border); border-radius: 12px; padding: 48px 24px; text-align: center; color: var(--ink-soft); }
+  .empty-state h2 { font-family: 'Fraunces', serif; font-weight: 600; color: var(--ink); font-size: 20px; margin: 0 0 6px; }
   .empty-state p { margin: 0 0 18px; font-size: 14px; }
-
-  .pillar {
-    background: var(--paper-raised);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    margin-bottom: 18px;
-    box-shadow: 0 1px 2px var(--shadow);
-    overflow: hidden;
-  }
-  .pillar-head {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 14px 16px;
-    border-bottom: 1px solid var(--border);
-    background: linear-gradient(180deg, var(--paper-raised), var(--paper));
-  }
-  .pillar-head .toggle {
-    background: none; border: none; cursor: pointer;
-    color: var(--trunk); font-size: 13px; padding: 2px 4px;
-    flex-shrink: 0;
-    transform: rotate(90deg);
-    transition: transform .15s ease;
-  }
+  .pillar { background: var(--paper-raised); border: 1px solid var(--border); border-radius: 12px; margin-bottom: 18px; box-shadow: 0 1px 2px var(--shadow); overflow: hidden; }
+  .pillar-head { display: flex; align-items: center; gap: 10px; padding: 14px 16px; border-bottom: 1px solid var(--border); background: linear-gradient(180deg, var(--paper-raised), var(--paper)); }
+  .pillar-head .toggle { background: none; border: none; cursor: pointer; color: var(--trunk); font-size: 13px; padding: 2px 4px; flex-shrink: 0; transform: rotate(90deg); transition: transform .15s ease; }
   .pillar.collapsed .pillar-head .toggle { transform: rotate(0deg); }
-  .pillar-name {
-    font-family: 'Fraunces', serif;
-    font-weight: 600;
-    font-size: 18px;
-    color: var(--ink);
-    border: none;
-    background: transparent;
-    flex: 1;
-    min-width: 0;
-    padding: 3px 2px;
-    border-radius: 4px;
-  }
+  .pillar-name { font-family: 'Fraunces', serif; font-weight: 600; font-size: 18px; color: var(--ink); border: none; background: transparent; flex: 1; min-width: 0; padding: 3px 2px; border-radius: 4px; }
   .pillar-name:focus { outline: none; background: var(--paper); }
-  .pillar-count {
-    font-size: 12.5px;
-    color: var(--ink-soft);
-    white-space: nowrap;
-    flex-shrink: 0;
-  }
-  .icon-btn {
-    background: none;
-    border: none;
-    color: var(--ink-soft);
-    cursor: pointer;
-    font-size: 15px;
-    padding: 4px 6px;
-    border-radius: 5px;
-    flex-shrink: 0;
-  }
+  .pillar-count { font-size: 12.5px; color: var(--ink-soft); white-space: nowrap; flex-shrink: 0; }
+  .icon-btn { background: none; border: none; color: var(--ink-soft); cursor: pointer; font-size: 15px; padding: 4px 6px; border-radius: 5px; flex-shrink: 0; }
   .icon-btn:hover { color: var(--rust); background: var(--rust-soft); }
-
   .pillar-body { padding: 6px 16px 14px; }
   .pillar.collapsed .pillar-body { display: none; }
-
-  .kw-row {
-    display: grid;
-    grid-template-columns: 20px 1.3fr 1fr 150px 30px;
-    gap: 10px;
-    align-items: center;
-    padding: 7px 0;
-    position: relative;
-  }
-  .kw-row::before {
-    content: "";
-    position: absolute;
-    left: 8px; top: -1px;
-    width: 10px; height: 50%;
-    border-left: 1.5px solid var(--border);
-    border-bottom: 1.5px solid var(--border);
-    border-radius: 0 0 0 6px;
-  }
-  .kw-row::after {
-    content: "";
-    position: absolute;
-    left: 8px; top: 45%;
-    bottom: -8px;
-    border-left: 1.5px solid var(--border);
-  }
+  .kw-row { display: grid; grid-template-columns: 20px 1.3fr 1fr 150px 30px; gap: 10px; align-items: center; padding: 7px 0; position: relative; }
+  .kw-row::before { content: ""; position: absolute; left: 8px; top: -1px; width: 10px; height: 50%; border-left: 1.5px solid var(--border); border-bottom: 1.5px solid var(--border); border-radius: 0 0 0 6px; }
+  .kw-row::after { content: ""; position: absolute; left: 8px; top: 45%; bottom: -8px; border-left: 1.5px solid var(--border); }
   .kw-row:last-of-type::after { display: none; }
   .kw-branch { width: 20px; }
-  .kw-row input[type=text] {
-    width: 100%;
-    padding: 7px 9px;
-    border: 1px solid transparent;
-    border-radius: 6px;
-    background: transparent;
-    color: var(--ink);
-    font-family: inherit;
-    font-size: 13.5px;
-  }
+  .kw-row input[type=text] { width: 100%; padding: 7px 9px; border: 1px solid transparent; border-radius: 6px; background: transparent; color: var(--ink); font-family: inherit; font-size: 13.5px; }
   .kw-row input[type=text]:hover { border-color: var(--border); }
   .kw-row input[type=text]:focus { border-color: var(--trunk-soft); background: var(--paper); outline: none; }
   .kw-row input.kw-text { font-weight: 500; }
-  .kw-row input.kw-article::placeholder,
-  .kw-row input.kw-text::placeholder { color: var(--ink-soft); opacity: .6; }
-
-  select.kw-status {
-    width: 100%;
-    padding: 6px 8px;
-    border-radius: 999px;
-    border: 1px solid transparent;
-    font-family: inherit;
-    font-size: 12.5px;
-    font-weight: 600;
-    cursor: pointer;
-    appearance: none;
-    text-align: center;
-    background-position: right 8px center;
-  }
+  .kw-row input.kw-article::placeholder, .kw-row input.kw-text::placeholder { color: var(--ink-soft); opacity: .6; }
+  select.kw-status { width: 100%; padding: 6px 8px; border-radius: 999px; border: 1px solid transparent; font-family: inherit; font-size: 12.5px; font-weight: 600; cursor: pointer; appearance: none; text-align: center; background-position: right 8px center; }
   select.kw-status:focus { outline: 2px solid var(--trunk-soft); }
   select.status-todo { background-color: var(--status-todo-bg); color: var(--status-todo); }
   select.status-progress { background-color: var(--status-progress-bg); color: var(--status-progress); }
   select.status-done { background-color: var(--status-done-bg); color: var(--status-done); }
-
-  .add-kw {
-    margin-left: 20px;
-    margin-top: 4px;
-    background: none;
-    border: none;
-    color: var(--trunk);
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    padding: 6px 4px;
-  }
+  .add-kw { margin-left: 20px; margin-top: 4px; background: none; border: none; color: var(--trunk); font-size: 13px; font-weight: 600; cursor: pointer; padding: 6px 4px; }
   .add-kw:hover { color: var(--rust); }
-
   .add-pillar-row { text-align: center; margin-top: 12px; }
-
   .hidden-row { display: none !important; }
-
-  footer {
-    margin-top: 36px;
-    text-align: center;
-    color: var(--ink-soft);
-    font-size: 12.5px;
-  }
-
+  footer { margin-top: 36px; text-align: center; color: var(--ink-soft); font-size: 12.5px; }
   @media (max-width: 620px) {
     .kw-row { grid-template-columns: 14px 1fr; grid-template-areas: "b text" "b article" "b status"; row-gap: 6px; padding: 10px 0; }
-    .kw-branch { grid-area: b; }
-    .kw-text { grid-area: text; }
-    .kw-article { grid-area: article; }
+    .kw-branch { grid-area: b; } .kw-text { grid-area: text; } .kw-article { grid-area: article; }
     .kw-status-wrap { grid-area: status; display: flex; justify-content: space-between; align-items: center; }
     select.kw-status { width: auto; min-width: 130px; }
   }
+  body.readonly .icon-btn, body.readonly .add-kw, body.readonly .add-pillar-row,
+  body.readonly #addPillarBtn, body.readonly #importBtn, body.readonly .empty-state .btn { display: none !important; }
+  body.readonly .kw-row input[type=text]:hover { border-color: transparent; }
+  body.readonly select.kw-status { cursor: default; opacity: 1; }
+  #lockBtn { white-space: nowrap; }
 </style>
 </head>
 <body>
 <div class="wrap">
   <header class="page-head">
-    <div>
-      <h1>Cây từ khóa NNX</h1>
-      <p class="tagline">Quản lý cụm chủ đề và từ khóa con cho nội dung mới</p>
-    </div>
+    <div><h1>Cây từ khóa NNX</h1><p class="tagline">Quản lý cụm chủ đề và từ khóa con cho nội dung mới</p></div>
     <div class="sync-status" id="syncStatus">Đang tải…</div>
   </header>
-
   <div class="toolbar">
-    <div class="search-field">
-      <input type="text" id="searchInput" placeholder="Tìm từ khóa hoặc bài viết…">
-    </div>
+    <div class="search-field"><input type="text" id="searchInput" placeholder="Tìm từ khóa hoặc bài viết…"></div>
     <button class="btn" id="exportCsvBtn">Xuất CSV</button>
     <button class="btn" id="exportJsonBtn">Xuất JSON</button>
     <button class="btn" id="importBtn">Nhập file</button>
     <input type="file" id="importFile" accept=".csv,.json,text/csv,application/json" hidden>
+    <button class="btn" id="lockBtn">Đăng nhập để sửa</button>
     <button class="btn primary" id="addPillarBtn">+ Cụm chủ đề</button>
   </div>
-
   <nav class="pillar-nav" id="pillarNav"></nav>
-
   <main id="pillarList"></main>
-
-  <footer>Dữ liệu dùng chung, lưu tự động vào Google Sheet. Mọi người mở link đều thấy cùng một bản.</footer>
+  <footer>Dữ liệu dùng chung, lưu tự động vào Google Sheet. Mọi người đều xem được, chỉ người có mật khẩu mới sửa được.</footer>
 </div>
-
 <script>
 (function () {
   "use strict";
-
-  // ===== CẤU HÌNH =====
-  // Dán URL Web App của Google Apps Script (kết thúc bằng /exec) vào đây.
   const API_URL = "https://script.google.com/macros/s/AKfycbyz4Vjo3EuvIPp5ZA4pRVohjr0n3nLO0EwEuuMyuX5pXUaZiBpZuYQQPdt02ejl2fDNag/exec";
-  // =====================
-
   const STATUSES = [
     { value: "todo", label: "Chưa viết", cls: "status-todo" },
     { value: "progress", label: "Đang viết", cls: "status-progress" },
@@ -410,491 +169,223 @@
   ];
   const STATUS_MAP = Object.fromEntries(STATUSES.map(s => [s.value, s]));
   const LABEL_TO_STATUS = Object.fromEntries(STATUSES.map(s => [s.label, s.value]));
-
   const OLD_STORAGE_KEY = "cay-tu-khoa:v1";
   const COLLAPSE_KEY = "cay-tu-khoa:collapsed";
   const POLL_MS = 20000;
-
-  let state = { pillars: [] };
-  let version = 0;
-  let pending = [];
-  let inflight = false;
-  let flushTimer = null;
-  let searchTerm = "";
-  let collapsed = {};
-  let loaded = false;
-
-  const listEl = document.getElementById("pillarList");
-  const pillarNavEl = document.getElementById("pillarNav");
-  const syncEl = document.getElementById("syncStatus");
-  const searchInput = document.getElementById("searchInput");
+  const KEY_STORAGE = "cay-tu-khoa:key";
+  let state = { pillars: [] }, version = 0, pending = [], inflight = false, flushTimer = null;
+  let searchTerm = "", collapsed = {}, loaded = false, editKey = "", canEdit = false;
+  try { editKey = localStorage.getItem(KEY_STORAGE) || ""; } catch (e) {}
+  const listEl = document.getElementById("pillarList"), pillarNavEl = document.getElementById("pillarNav");
+  const syncEl = document.getElementById("syncStatus"), searchInput = document.getElementById("searchInput");
   const importInput = document.getElementById("importFile");
-
   try { collapsed = JSON.parse(localStorage.getItem(COLLAPSE_KEY) || "{}") || {}; } catch (e) { collapsed = {}; }
   function saveCollapsed() { try { localStorage.setItem(COLLAPSE_KEY, JSON.stringify(collapsed)); } catch (e) {} }
-
   function uid() { return Math.random().toString(36).slice(2, 10); }
-  function setSync(text, isError) {
-    syncEl.textContent = text;
-    syncEl.style.color = isError ? "var(--rust)" : "";
-  }
+  function setSync(text, isError) { syncEl.textContent = text; syncEl.style.color = isError ? "var(--rust)" : ""; }
+  function normStatus(v) { v = String(v || "").trim(); if (STATUS_MAP[v]) return v; return LABEL_TO_STATUS[v] || "todo"; }
 
-  function normStatus(v) {
-    v = String(v || "").trim();
-    if (STATUS_MAP[v]) return v;
-    return LABEL_TO_STATUS[v] || "todo";
-  }
-
-  // ---------- Đồng bộ với Google Sheet ----------
   function queueOp(op) {
-    pending.push(op);
-    setSync("Đang lưu…");
-    clearTimeout(flushTimer);
-    flushTimer = setTimeout(flush, 400);
+    if (!canEdit) return;
+    pending.push(op); setSync("Đang lưu…"); clearTimeout(flushTimer); flushTimer = setTimeout(flush, 400);
   }
-
   async function flush() {
     if (inflight || !pending.length) return;
-    inflight = true;
-    const ops = pending;
-    pending = [];
+    inflight = true; const ops = pending; pending = [];
     try {
-      const res = await fetch(API_URL, {
-        method: "POST",
-        headers: { "Content-Type": "text/plain;charset=utf-8" },
-        body: JSON.stringify({ ops }),
-      });
+      const res = await fetch(API_URL, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify({ ops, key: editKey }) });
       const data = await res.json();
+      if (data.error === "forbidden") {
+        pending = []; setEditMode(false, ""); alert("Mật khẩu sửa không đúng hoặc đã bị đổi. Thay đổi vừa rồi chưa được lưu.");
+        await loadFromServer(); render(); return;
+      }
       if (!data.ok) throw new Error(data.error || "Lỗi máy chủ");
       version = data.version;
-      if (!pending.length && !isEditing()) {
-        state = data.state;
-        render();
-      }
+      if (!pending.length && !isEditing()) { state = data.state; render(); }
       setSync("Đã lưu vào Google Sheet dùng chung");
-    } catch (e) {
-      pending = ops.concat(pending);
-      setSync("Chưa lưu được, đang thử lại…", true);
-      setTimeout(flush, 5000);
-    } finally {
-      inflight = false;
-      if (pending.length) flush();
-    }
+    } catch (e) { pending = ops.concat(pending); setSync("Chưa lưu được, đang thử lại…", true); setTimeout(flush, 5000); }
+    finally { inflight = false; if (pending.length) flush(); }
   }
-
-  function isEditing() {
-    const a = document.activeElement;
-    return !!(a && listEl.contains(a) && (a.tagName === "INPUT" || a.tagName === "SELECT"));
-  }
-
+  function isEditing() { const a = document.activeElement; return !!(a && listEl.contains(a) && (a.tagName === "INPUT" || a.tagName === "SELECT")); }
   async function loadFromServer() {
-    const res = await fetch(API_URL + "?t=" + Date.now());
-    const data = await res.json();
-    if (!data.ok) throw new Error(data.error || "Lỗi máy chủ");
-    state = data.state;
-    version = data.version;
+    const res = await fetch(API_URL + "?t=" + Date.now()), data = await res.json();
+    if (!data.ok) throw new Error(data.error || "Lỗi máy chủ"); state = data.state; version = data.version;
   }
-
   async function poll() {
     if (!API_URL || document.hidden || pending.length || inflight || isEditing()) return;
     try {
-      const res = await fetch(API_URL + "?v=1&t=" + Date.now());
-      const data = await res.json();
-      if (data.ok && data.version !== version) {
-        await loadFromServer();
-        if (!pending.length && !isEditing()) {
-          render();
-          setSync("Đã cập nhật thay đổi mới nhất");
-        }
-      }
+      const res = await fetch(API_URL + "?v=1&t=" + Date.now()), data = await res.json();
+      if (data.ok && data.version !== version) { await loadFromServer(); if (!pending.length && !isEditing()) { render(); setSync("Đã cập nhật thay đổi mới nhất"); } }
     } catch (e) { /* bỏ qua, lần sau thử lại */ }
   }
 
-  // ---------- Thao tác ----------
   function addPillar() {
-    const p = { id: uid(), name: "Cụm chủ đề mới", keywords: [] };
-    state.pillars.unshift(p);
-    render();
+    const p = { id: uid(), name: "Cụm chủ đề mới", keywords: [] }; state.pillars.unshift(p); render();
     queueOp({ type: "addPillar", id: p.id, name: p.name });
-    const inputs = listEl.queryAllSelectorAll(".pillar-name");
-    if (inputs.length) inputs[0].select();
+    const inputs = listEl.querySelectorAll(".pillar-name"); if (inputs.length) inputs[0].select();
   }
-
   function removePillar(pid) {
-    const p = state.pillars.find(p => p.id === pid);
-    if (!p) return;
+    const p = state.pillars.find(p => p.id === pid); if (!p) return;
     if (p.keywords.length && !confirm('Xóa cụm "' + p.name + '" và toàn bộ ' + p.keywords.length + ' từ khóa bên trong?')) return;
-    state.pillars = state.pillars.filter(p => p.id !== pid);
-    render();
-    queueOp({ type: "removePillar", id: pid });
+    state.pillars = state.pillars.filter(p => p.id !== pid); render(); queueOp({ type: "removePillar", id: pid });
   }
-
   function addKeyword(pid) {
-    const p = state.pillars.find(p => p.id === pid);
-    if (!p) return;
-    const kw = { id: uid(), text: "", article: "", status: "todo" };
-    p.keywords.push(kw);
+    const p = state.pillars.find(p => p.id === pid); if (!p) return;
+    const kw = { id: uid(), text: "", article: "", status: "todo" }; p.keywords.push(kw);
     if (collapsed[pid]) { delete collapsed[pid]; saveCollapsed(); }
-    render();
-    queueOp({ type: "addKeyword", pid, id: kw.id, text: "", article: "", status: "todo" });
-    const rows = listEl.querySelectorAll('.pillar[data-id="' + pid + '"] .kw-text');
-    if (rows.length) rows[rows.length - 1].focus();
+    render(); queueOp({ type: "addKeyword", pid, id: kw.id, text: "", article: "", status: "todo" });
+    const rows = listEl.querySelectorAll('.pillar[data-id="' + pid + '"] .kw-text'); if (rows.length) rows[rows.length - 1].focus();
   }
-
   function removeKeyword(pid, kid) {
-    const p = state.pillars.find(p => p.id === pid);
-    if (!p) return;
-    p.keywords = p.keywords.filter(k => k.id !== kid);
-    render();
-    queueOp({ type: "removeKeyword", pid, id: kid });
+    const p = state.pillars.find(p => p.id === pid); if (!p) return;
+    p.keywords = p.keywords.filter(k => k.id !== kid); render(); queueOp({ type: "removeKeyword", pid, id: kid });
   }
-
-  function toggleCollapse(pid) {
-    if (collapsed[pid]) delete collapsed[pid]; else collapsed[pid] = true;
-    saveCollapsed();
-    render();
-  }
-
+  function toggleCollapse(pid) { if (collapsed[pid]) delete collapsed[pid]; else collapsed[pid] = true; saveCollapsed(); render(); }
   function matchesSearch(pillar, kw) {
-    if (!searchTerm) return true;
-    const hay = (pillar.name + " " + kw.text + " " + kw.article).toLowerCase();
-    return hay.includes(searchTerm);
+    if (!searchTerm) return true; return (pillar.name + " " + kw.text + " " + kw.article).toLowerCase().includes(searchTerm);
   }
-
   function renderNav() {
     pillarNavEl.innerHTML = "";
     state.pillars.forEach(pillar => {
-      const chip = document.createElement("button");
-      chip.type = "button";
-      chip.className = "chip";
-      chip.dataset.id = pillar.id;
-      const label = document.createElement("span");
-      label.textContent = pillar.name;
-      const count = document.createElement("span");
-      count.className = "chip-count";
-      count.textContent = " · " + pillar.keywords.length;
-      chip.append(label, count);
-      chip.addEventListener("click", () => jumpToPillar(pillar.id));
-      pillarNavEl.appendChild(chip);
+      const chip = document.createElement("button"); chip.type = "button"; chip.className = "chip"; chip.dataset.id = pillar.id;
+      const label = document.createElement("span"); label.textContent = pillar.name;
+      const count = document.createElement("span"); count.className = "chip-count"; count.textContent = " · " + pillar.keywords.length;
+      chip.append(label, count); chip.addEventListener("click", () => jumpToPillar(pillar.id)); pillarNavEl.appendChild(chip);
     });
   }
-
   function jumpToPillar(pid) {
     if (!state.pillars.find(p => p.id === pid)) return;
     if (collapsed[pid]) { delete collapsed[pid]; saveCollapsed(); render(); }
-    requestAnimationFrame(() => {
-      const el = listEl.querySelector('.pillar[data-id="' + pid + '"]');
-      if (!el) return;
-      el.scrollIntoView({ behavior: "smooth", block: "start" });
-      el.classList.add("jump-flash");
-      setTimeout(() => el.classList.remove("jump-flash"), 1100);
-    });
+    requestAnimationFrame(() => { const el = listEl.querySelector('.pillar[data-id="' + pid + '"]'); if (!el) return;
+      el.scrollIntoView({ behavior: "smooth", block: "start" }); el.classList.add("jump-flash"); setTimeout(() => el.classList.remove("jump-flash"), 1100); });
   }
-
   function render() {
-    renderNav();
-    listEl.innerHTML = "";
-
-    if (!loaded) return;
-
+    renderNav(); listEl.innerHTML = ""; if (!loaded) return;
     if (state.pillars.length === 0) {
-      const empty = document.createElement("div");
-      empty.className = "empty-state";
+      const empty = document.createElement("div"); empty.className = "empty-state";
       empty.innerHTML = '<h2>Chưa có cụm từ khóa nào</h2><p>Tạo cụm chủ đề mới, hoặc nhập dữ liệu có sẵn từ file CSV/JSON đã xuất trước đây.</p>';
-      const btn = document.createElement("button");
-      btn.className = "btn primary";
-      btn.textContent = "+ Tạo cụm đầu tiên";
-      btn.addEventListener("click", addPillar);
-      const imp = document.createElement("button");
-      imp.className = "btn";
-      imp.style.marginLeft = "8px";
-      imp.textContent = "Nhập file CSV/JSON";
-      imp.addEventListener("click", () => importInput.click());
-      empty.append(btn, imp);
+      const btn = document.createElement("button"); btn.className = "btn primary"; btn.textContent = "+ Tạo cụm đầu tiên"; btn.addEventListener("click", addPillar);
+      const imp = document.createElement("button"); imp.className = "btn"; imp.style.marginLeft = "8px"; imp.textContent = "Nhập file CSV/JSON"; imp.addEventListener("click", () => importInput.click()); empty.append(btn, imp);
       const local = readOldLocal();
-      if (API_URL && local && local.pillars.length) {
-        const up = document.createElement("button");
-        up.className = "btn";
-        up.style.marginLeft = "8px";
-        up.textContent = "Đưa dữ liệu cũ trong trình duyệt này lên";
-        up.addEventListener("click", () => replaceAll(local, "dữ liệu cũ trong trình duyệt"));
-        empty.appendChild(up);
-      }
-      listEl.appendChild(empty);
-      return;
+      if (API_URL && local && local.pillars.length) { const up = document.createElement("button"); up.className = "btn"; up.style.marginLeft = "8px"; up.textContent = "Đưa dữ liệu cũ trong trình duyệt này lên"; up.addEventListener("click", () => replaceAll(local, "dữ liệu cũ trong trình duyệt")); empty.appendChild(up); }
+      listEl.appendChild(empty); return;
     }
-
     state.pillars.forEach(pillar => {
       const visibleKws = pillar.keywords.filter(k => matchesSearch(pillar, k));
       const pillarMatchesName = searchTerm && pillar.name.toLowerCase().includes(searchTerm);
       if (searchTerm && visibleKws.length === 0 && !pillarMatchesName) return;
-
-      const card = document.createElement("section");
-      card.className = "pillar" + (collapsed[pillar.id] && !searchTerm ? " collapsed" : "");
-      card.dataset.id = pillar.id;
-
-      const head = document.createElement("div");
-      head.className = "pillar-head";
-
-      const toggle = document.createElement("button");
-      toggle.className = "toggle";
-      toggle.type = "button";
-      toggle.setAttribute("aria-label", "Thu gọn / mở rộng cụm");
-      toggle.textContent = "▸";
-      toggle.addEventListener("click", () => toggleCollapse(pillar.id));
-
-      const nameInput = document.createElement("input");
-      nameInput.className = "pillar-name";
-      nameInput.value = pillar.name;
-      nameInput.addEventListener("change", () => {
-        pillar.name = nameInput.value.trim() || "Cụm chủ đề";
-        queueOp({ type: "updatePillar", id: pillar.id, name: pillar.name });
-        renderNav();
+      const card = document.createElement("section"); card.className = "pillar" + (collapsed[pillar.id] && !searchTerm ? " collapsed" : ""); card.dataset.id = pillar.id;
+      const head = document.createElement("div"); head.className = "pillar-head";
+      const toggle = document.createElement("button"); toggle.className = "toggle"; toggle.type = "button"; toggle.setAttribute("aria-label", "Thu gọn / mở rộng cụm"); toggle.textContent = "▸"; toggle.addEventListener("click", () => toggleCollapse(pillar.id));
+      const nameInput = document.createElement("input"); nameInput.className = "pillar-name"; nameInput.value = pillar.name; nameInput.readOnly = !canEdit;
+      nameInput.addEventListener("change", () => { pillar.name = nameInput.value.trim() || "Cụm chủ đề"; queueOp({ type: "updatePillar", id: pillar.id, name: pillar.name }); renderNav(); });
+      const count = document.createElement("span"); count.className = "pillar-count"; count.textContent = pillar.keywords.length + " từ khóa";
+      const delBtn = document.createElement("button"); delBtn.className = "icon-btn"; delBtn.type = "button"; delBtn.title = "Xóa cụm"; delBtn.textContent = "✕"; delBtn.addEventListener("click", () => removePillar(pillar.id));
+      head.append(toggle, nameInput, count, delBtn); card.appendChild(head);
+      const body = document.createElement("div"); body.className = "pillar-body";
+      (searchTerm ? visibleKws : pillar.keywords).forEach(kw => {
+        const row = document.createElement("div"); row.className = "kw-row";
+        const branch = document.createElement("span"); branch.className = "kw-branch";
+        const textInput = document.createElement("input"); textInput.type = "text"; textInput.className = "kw-text"; textInput.placeholder = "từ khóa…"; textInput.value = kw.text; textInput.readOnly = !canEdit;
+        textInput.addEventListener("change", () => { kw.text = textInput.value; queueOp({ type: "updateKeyword", pid: pillar.id, id: kw.id, text: kw.text }); });
+        const articleInput = document.createElement("input"); articleInput.type = "text"; articleInput.className = "kw-article"; articleInput.placeholder = "bài viết liên kết (URL hoặc tên)"; articleInput.value = kw.article; articleInput.readOnly = !canEdit;
+        articleInput.addEventListener("change", () => { kw.article = articleInput.value; queueOp({ type: "updateKeyword", pid: pillar.id, id: kw.id, article: kw.article }); });
+        const statusWrap = document.createElement("div"); statusWrap.className = "kw-status-wrap";
+        const statusSelect = document.createElement("select"); statusSelect.className = "kw-status " + STATUS_MAP[normStatus(kw.status)].cls; statusSelect.disabled = !canEdit;
+        STATUSES.forEach(s => { const opt = document.createElement("option"); opt.value = s.value; opt.textContent = s.label; if (s.value === kw.status) opt.selected = true; statusSelect.appendChild(opt); });
+        statusSelect.addEventListener("change", () => { kw.status = statusSelect.value; statusSelect.className = "kw-status " + STATUS_MAP[kw.status].cls; queueOp({ type: "updateKeyword", pid: pillar.id, id: kw.id, status: kw.status }); });
+        const delKwBtn = document.createElement("button"); delKwBtn.className = "icon-btn"; delKwBtn.type = "button"; delKwBtn.title = "Xóa từ khóa"; delKwBtn.textContent = "✕"; delKwBtn.addEventListener("click", () => removeKeyword(pillar.id, kw.id));
+        statusWrap.appendChild(statusSelect); row.append(branch, textInput, articleInput, statusWrap, delKwBtn); body.appendChild(row);
       });
-
-      const count = document.createElement("span");
-      count.className = "pillar-count";
-      count.textContent = pillar.keywords.length + " từ khóa";
-
-      const delBtn = document.createElement("button");
-      delBtn.className = "icon-btn";
-      delBtn.type = "button";
-      delBtn.title = "Xóa cụm";
-      delBtn.textContent = "✕";
-      delBtn.addEventListener("click", () => removePillar(pillar.id));
-
-      head.append(toggle, nameInput, count, delBtn);
-      card.appendChild(head);
-
-      const body = document.createElement("div");
-      body.className = "pillar-body";
-
-      const kwsToRender = searchTerm ? visibleKws : pillar.keywords;
-      kwsToRender.forEach(kw => {
-        const row = document.createElement("div");
-        row.className = "kw-row";
-
-        const branch = document.createElement("span");
-        branch.className = "kw-branch";
-
-        const textInput = document.createElement("input");
-        textInput.type = "text";
-        textInput.className = "kw-text";
-        textInput.placeholder = "từ khóa…";
-        textInput.value = kw.text;
-        textInput.addEventListener("change", () => {
-          kw.text = textInput.value;
-          queueOp({ type: "updateKeyword", pid: pillar.id, id: kw.id, text: kw.text });
-        });
-
-        const articleInput = document.createElement("input");
-        articleInput.type = "text";
-        articleInput.className = "kw-article";
-        articleInput.placeholder = "bài viết liên kết (URL hoặc tên)";
-        articleInput.value = kw.article;
-        articleInput.addEventListener("change", () => {
-          kw.article = articleInput.value;
-          queueOp({ type: "updateKeyword", pid: pillar.id, id: kw.id, article: kw.article });
-        });
-
-        const statusWrap = document.createElement("div");
-        statusWrap.className = "kw-status-wrap";
-
-        const statusSelect = document.createElement("select");
-        statusSelect.className = "kw-status " + STATUS_MAP[normStatus(kw.status)].cls;
-        STATUSES.forEach(s => {
-          const opt = document.createElement("option");
-          opt.value = s.value;
-          opt.textContent = s.label;
-          if (s.value === kw.status) opt.selected = true;
-          statusSelect.appendChild(opt);
-        });
-        statusSelect.addEventListener("change", () => {
-          kw.status = statusSelect.value;
-          statusSelect.className = "kw-status " + STATUS_MAP[kw.status].cls;
-          queueOp({ type: "updateKeyword", pid: pillar.id, id: kw.id, status: kw.status });
-        });
-
-        const delKwBtn = document.createElement("button");
-        delKwBtn.className = "icon-btn";
-        delKwBtn.type = "button";
-        delKwBtn.title = "Xóa từ khóa";
-        delKwBtn.textContent = "✕";
-        delKwBtn.addEventListener("click", () => removeKeyword(pillar.id, kw.id));
-
-        statusWrap.appendChild(statusSelect);
-        row.append(branch, textInput, articleInput, statusWrap, delKwBtn);
-        body.appendChild(row);
-      });
-
-      const addKwBtn = document.createElement("button");
-      addKwBtn.className = "add-kw";
-      addKwBtn.type = "button";
-      addKwBtn.textContent = "+ Thêm từ khóa";
-      addKwBtn.addEventListener("click", () => addKeyword(pillar.id));
-      body.appendChild(addKwBtn);
-
-      card.appendChild(body);
-      listEl.appendChild(card);
+      const addKwBtn = document.createElement("button"); addKwBtn.className = "add-kw"; addKwBtn.type = "button"; addKwBtn.textContent = "+ Thêm từ khóa"; addKwBtn.addEventListener("click", () => addKeyword(pillar.id)); body.appendChild(addKwBtn);
+      card.appendChild(body); listEl.appendChild(card);
     });
-
-    const addRow = document.createElement("div");
-    addRow.className = "add-pillar-row";
-    const btn = document.createElement("button");
-    btn.className = "btn";
-    btn.textContent = "+ Cụm chủ đề mới";
-    btn.addEventListener("click", addPillar);
-    addRow.appendChild(btn);
-    listEl.appendChild(addRow);
+    const addRow = document.createElement("div"); addRow.className = "add-pillar-row"; const btn = document.createElement("button"); btn.className = "btn"; btn.textContent = "+ Cụm chủ đề mới"; btn.addEventListener("click", addPillar); addRow.appendChild(btn); listEl.appendChild(addRow);
   }
 
-  // ---------- Xuất / nhập ----------
-  function csvEscape(v) {
-    const s = String(v == null ? "" : v);
-    if (/[",\n]/.test(s)) return '"' + s.replace(/"/g, '""') + '"';
-    return s;
-  }
-
+  function csvEscape(v) { const s = String(v == null ? "" : v); if (/[",\n]/.test(s)) return '"' + s.replace(/"/g, '""') + '"'; return s; }
   function downloadFile(filename, content, mime) {
-    const blob = new Blob([content], { type: mime });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = filename;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    const blob = new Blob([content], { type: mime }), url = URL.createObjectURL(blob), a = document.createElement("a");
+    a.href = url; a.download = filename; document.body.appendChild(a); a.click(); document.body.removeChild(a); setTimeout(() => URL.revokeObjectURL(url), 1000);
   }
-
   function exportCsv() {
     const rows = [["Cụm chủ đề", "Từ khóa", "Bài viết liên kết", "Trạng thái"]];
-    state.pillars.forEach(p => {
-      p.keywords.forEach(k => {
-        rows.push([p.name, k.text, k.article, STATUS_MAP[normStatus(k.status)].label]);
-      });
-    });
-    const csv = "﻿" + rows.map(r => r.map(csvEscape).join(",")).join("\r\n");
-    downloadFile("cay-tu-khoa.csv", csv, "text/csv;charset=utf-8");
+    state.pillars.forEach(p => p.keywords.forEach(k => rows.push([p.name, k.text, k.article, STATUS_MAP[normStatus(k.status)].label])));
+    downloadFile("cay-tu-khoa.csv", "﻿" + rows.map(r => r.map(csvEscape).join(",")).join("\r\n"), "text/csv;charset=utf-8");
   }
-
-  function exportJson() {
-    const json = JSON.stringify(state, null, 2);
-    downloadFile("cay-tu-khoa.json", json, "application/json;charset=utf-8");
-  }
-
+  function exportJson() { downloadFile("cay-tu-khoa.json", JSON.stringify(state, null, 2), "application/json;charset=utf-8"); }
   function parseCsv(text) {
-    text = text.replace(/^﻿/, "");
-    const rows = [];
-    let row = [], field = "", q = false;
-    for (let i = 0; i < text.length; i++) {
-      const c = text[i];
-      if (q) {
-        if (c === '"') {
-          if (text[i + 1] === '"') { field += '"'; i++; } else q = false;
-        } else field += c;
-      } else if (c === '"') q = true;
-      else if (c === ",") { row.push(field); field = ""; }
-      else if (c === "\n" || c === "\r") {
-        if (c === "\r" && text[i + 1] === "\n") i++;
-        row.push(field); rows.push(row); row = []; field = "";
-      } else field += c;
+    text = text.replace(/^﻿/, ""); const rows = []; let row = [], field = "", q = false;
+    for (let i = 0; i < text.length; i++) { const c = text[i];
+      if (q) { if (c === '"') { if (text[i + 1] === '"') { field += '"'; i++; } else q = false; } else field += c; }
+      else if (c === '"') q = true; else if (c === ",") { row.push(field); field = ""; }
+      else if (c === "\n" || c === "\r") { if (c === "\r" && text[i + 1] === "\n") i++; row.push(field); rows.push(row); row = []; field = ""; }
+      else field += c;
     }
-    if (field || row.length) { row.push(field); rows.push(row); }
-    return rows.filter(r => r.some(x => x.trim() !== ""));
+    if (field || row.length) { row.push(field); rows.push(row); } return rows.filter(r => r.some(x => x.trim() !== ""));
   }
-
   function csvToState(text) {
-    const rows = parseCsv(text);
-    if (rows.length && /cụm/i.test(rows[0][0] || "")) rows.shift();
-    const pillars = [];
-    const byName = {};
-    rows.forEach(r => {
-      const name = (r[0] || "").trim();
-      if (!name) return;
-      let p = byName[name];
+    const rows = parseCsv(text); if (rows.length && /cụm/i.test(rows[0][0] || "")) rows.shift();
+    const pillars = [], byName = {};
+    rows.forEach(r => { const name = (r[0] || "").trim(); if (!name) return; let p = byName[name];
       if (!p) { p = { id: uid(), name, keywords: [] }; byName[name] = p; pillars.push(p); }
-      const text = (r[1] || "").trim(), article = (r[2] || "").trim();
-      if (!text && !article) return;
+      const text = (r[1] || "").trim(), article = (r[2] || "").trim(); if (!text && !article) return;
       p.keywords.push({ id: uid(), text, article, status: normStatus(r[3]) });
-    });
-    return { pillars };
+    }); return { pillars };
   }
-
   function readOldLocal() {
-    try {
-      const raw = localStorage.getItem(OLD_STORAGE_KEY);
-      if (!raw) return null;
-      const data = JSON.parse(raw);
-      return data && Array.isArray(data.pillars) ? data : null;
-    } catch (e) { return null; }
+    try { const raw = localStorage.getItem(OLD_STORAGE_KEY); if (!raw) return null; const data = JSON.parse(raw); return data && Array.isArray(data.pillars) ? data : null; }
+    catch (e) { return null; }
   }
-
   function replaceAll(newState, source) {
     const nKw = newState.pillars.reduce((s, p) => s + p.keywords.length, 0);
     const msg = "Thay TOÀN BỘ dữ liệu dùng chung bằng " + source + " (" + newState.pillars.length + " cụm, " + nKw + " từ khóa)?\nMọi người sẽ thấy dữ liệu mới này.";
     if (state.pillars.length && !confirm(msg)) return;
     state = { pillars: newState.pillars.map(p => ({ id: p.id || uid(), name: p.name, keywords: p.keywords.map(k => ({ id: k.id || uid(), text: k.text || "", article: k.article || "", status: normStatus(k.status) })) })) };
-    render();
-    queueOp({ type: "replaceAll", state });
+    render(); queueOp({ type: "replaceAll", state });
   }
-
   importInput.addEventListener("change", () => {
-    const file = importInput.files[0];
-    importInput.value = "";
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = () => {
-      try {
-        const text = String(reader.result);
-        let data;
-        if (/\.json$/i.test(file.name) || text.trim().startsWith("{")) {
-          data = JSON.parse(text);
-          if (!data || !Array.isArray(data.pillars)) throw new Error("JSON không đúng định dạng");
-        } else {
-          data = csvToState(text);
-        }
-        if (!data.pillars.length) throw new Error("File không có dữ liệu");
-        replaceAll(data, 'file "' + file.name + '"');
-      } catch (e) {
-        alert("Không đọc được file: " + e.message);
-      }
-    };
+    const file = importInput.files[0]; importInput.value = ""; if (!file) return; const reader = new FileReader();
+    reader.onload = () => { try { const text = String(reader.result); let data;
+      if (/\.json$/i.test(file.name) || text.trim().startsWith("{")) { data = JSON.parse(text); if (!data || !Array.isArray(data.pillars)) throw new Error("JSON không đúng định dạng"); }
+      else data = csvToState(text);
+      if (!data.pillars.length) throw new Error("File không có dữ liệu"); replaceAll(data, 'file "' + file.name + '"');
+    } catch (e) { alert("Không đọc được file: " + e.message); } };
     reader.readAsText(file, "utf-8");
   });
-
   document.getElementById("addPillarBtn").addEventListener("click", addPillar);
   document.getElementById("exportCsvBtn").addEventListener("click", exportCsv);
   document.getElementById("exportJsonBtn").addEventListener("click", exportJson);
   document.getElementById("importBtn").addEventListener("click", () => importInput.click());
-  searchInput.addEventListener("input", () => {
-    searchTerm = searchInput.value.trim().toLowerCase();
-    render();
-  });
+  searchInput.addEventListener("input", () => { searchTerm = searchInput.value.trim().toLowerCase(); render(); });
 
-  window.addEventListener("beforeunload", e => {
-    if (pending.length || inflight) { e.preventDefault(); e.returnValue = ""; }
+  function setEditMode(on, key) {
+    canEdit = on; editKey = key;
+    try { if (on) localStorage.setItem(KEY_STORAGE, key); else localStorage.removeItem(KEY_STORAGE); } catch (e) {}
+    document.body.classList.toggle("readonly", !on);
+    document.getElementById("lockBtn").textContent = on ? "Thoát chế độ sửa" : "Đăng nhập để sửa";
+    render();
+  }
+  async function checkKey(key) {
+    const res = await fetch(API_URL, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify({ check: true, key }) });
+    const data = await res.json(); return !!data.ok;
+  }
+  document.getElementById("lockBtn").addEventListener("click", async () => {
+    if (canEdit) { if (pending.length || inflight) { alert("Đang lưu, vui lòng đợi vài giây."); return; } setEditMode(false, ""); setSync("Chế độ xem"); return; }
+    const key = prompt("Nhập mật khẩu để sửa:"); if (!key) return; setSync("Đang kiểm tra mật khẩu…");
+    try { if (await checkKey(key)) { setEditMode(true, key); setSync("Đang ở chế độ sửa"); }
+      else { setSync("Chế độ xem"); alert("Mật khẩu không đúng."); } }
+    catch (e) { setSync("Không kiểm tra được mật khẩu, thử lại sau", true); }
   });
+  window.addEventListener("beforeunload", e => { if (pending.length || inflight) { e.preventDefault(); e.returnValue = ""; } });
   document.addEventListener("visibilitychange", () => { if (!document.hidden) poll(); });
-
   (async function init() {
-    if (!API_URL) {
-      setSync("Chưa kết nối Google Sheet (thiếu API_URL)", true);
-      loaded = true;
-      render();
-      return;
-    }
-    setSync("Đang tải dữ liệu dùng chung…");
-    try {
-      await loadFromServer();
-      loaded = true;
-      setSync("Đã đồng bộ với Google Sheet dùng chung");
-    } catch (e) {
-      setSync("Không tải được dữ liệu, hãy tải lại trang", true);
-      return;
-    }
-    render();
-    setInterval(poll, POLL_MS);
+    if (!API_URL) { setSync("Chưa kết nối Google Sheet (thiếu API_URL)", true); loaded = true; render(); return; }
+    setSync("Đang tải dữ liệu dùng chung…"); document.body.classList.add("readonly");
+    try { await loadFromServer(); loaded = true; if (editKey) { try { canEdit = await checkKey(editKey); } catch (e) { canEdit = false; } }
+      setEditMode(canEdit, canEdit ? editKey : ""); setSync(canEdit ? "Đang ở chế độ sửa" : "Chế độ xem"); }
+    catch (e) { setSync("Không tải được dữ liệu, hãy tải lại trang", true); return; }
+    render(); setInterval(poll, POLL_MS);
   })();
 })();
 </script>
